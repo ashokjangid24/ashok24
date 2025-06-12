@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI सहायक | Ashok Jangid</title>
+  <a href="login.html"></a>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --bg-light: #f5f5f5;
+      --text-light: #ffffff;
+      --text-dark: #000000;
+      --primary: #00bcd4;
+      --accent: #00e676;
+      --bubble-user: #00bcd4;
+      --bubble-ai: #1f1f1f;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideDown 0.6s ease;
+    }
+
+    header h1 {
+      font-size: 22px;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    nav button {
+      background-color: #ffffff33;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    nav button:hover {
+      background-color: #ffffff55;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: var(--bubble-user);
+      color: black;
+    }
+
+    .ai {
+      align-self: flex-start;
+      background-color: var(--bubble-ai);
+      color: white;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background-color: white;
+      gap: 10px;
+      border-top: 1px solid #ccc;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .input-area button {
+      background-color: var(--accent);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .input-area button:hover {
+      background-color: #00c853;
+    }
+
+    .emoji-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: black;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* Light mode override */
+    body.light-mode {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+    }
+
+    body.light-mode main .ai {
+      background-color: #e0e0e0;
+      color: black;
+    }
+
+    body.light-mode main .user {
+      background-color: #b2ebf2;
+    }
+
+    body.light-mode .input-area {
+      background-color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 18px;
+      }
+
+      .input-area input {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 AI सहायक | Ashok</h1>
+    <nav>
+      <button onclick="toggleDarkMode()">🌓 मोड</button>
+      <button onclick="clearChat()">🧹 क्लियर</button>
+     <button><a href="login.html">Profile</a></button>
+    </nav>
+  </header>
+
+  <main id="chatBox">
+    <div class="message ai">नमस्ते! मैं आपका AI सहायक हूँ। मुझसे हिंदी में कुछ भी पूछें।</div>
+  </main>
+
+  <div class="input-area">
+    <button class="emoji-btn" onclick="insertEmoji('😊')">😊</button>
+    <button class="emoji-btn" onclick="insertEmoji('👍')">👍</button>
+    <input type="text" id="userInput" placeholder="यहाँ टाइप करें..." onkeydown="if(event.key==='Enter') sendMessage()">
+    <button onclick="sendMessage()">📨</button>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const input = document.getElementById("userInput");
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user');
+      input.value = '';
+
+      setTimeout(() => {
+        const response = aiReply(text);
+        appendMessage(response, 'ai');
+      }, 600);
+    }
+
+    function appendMessage(msg, type) {
+      const div = document.createElement("div");
+      div.className = `message ${type}`;
+      div.textContent = msg;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function aiReply(msg) {
+      const q = msg.toLowerCase();
+      if (q.includes('नाम')) return "मेरा नाम AI सहायक है।";
+      if (q.includes('html')) return "HTML का पूरा नाम है: Hyper Text Markup Language।";
+      if (q.includes('समय') || q.includes('time')) return `अभी समय है: ${new Date().toLocaleTimeString('hi-IN')}`;
+      if (q.includes('भाषा')) return "मैं हिंदी, अंग्रेज़ी और कुछ अन्य भाषाएँ समझ सकता हूँ।";
+      if (q.includes('hello') || q.includes('हेलो')) return "नमस्ते! कैसे मदद कर सकता हूँ?";
+      if (q.includes('😊')) return "धन्यवाद! 😊";
+      if (q.includes('👍')) return "शुभकामनाएँ! 👍";
+      if (q.includes('hi')) return "हाय! कैसे हैं आप?";
+      return "माफ़ कीजिए, मैं इस सवाल को नहीं समझ पाया। कृपया कुछ और पूछें।";
+    }
+
+    function insertEmoji(emoji) {
+      input.value += emoji;
+      input.focus();
+    }
+
+    function clearChat() {
+      chatBox.innerHTML = '<div class="message ai">नमस्ते! मैं आपका AI सहायक हूँ। मुझसे हिंदी में कुछ भी पूछें।</div>';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("light-mode");
+    }
+  </script>
+</body>
+</html>
